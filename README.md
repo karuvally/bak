@@ -1,6 +1,5 @@
 # Bak
-Ultra simple backup utility, v0.2
-Copyright 2016, Aswin Babu Karuvally
+Ultra simple backup v0.2
 
 
 ## Introduction
