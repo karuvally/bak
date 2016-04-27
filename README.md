@@ -20,6 +20,7 @@ for this application to run smoothly.
 - Just type 'bak' in terminal and the present working directory will be backed up
 - A message at the end of the backup process will tell you, if the process was successful
 - By default, files will be backed up inside 'bak' directory in user's home
+- Force bak to backup a non-current directory by passing the '-s' flag along with directory path
 
 ## Configuring Bak
 - The configuration file is automatically generated as '/home/user/.config/bak.conf'
