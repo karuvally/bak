@@ -22,8 +22,10 @@ for this application to run smoothly.
 - By default, files will be backed up inside 'bak' directory in user's home
 
 ## Configuring Bak
-- After the initial run, Bak will automatically create the configuration file
-- 
+- The configuration file is automatically generated as '/home/user/.config/bak.conf'
+- Add complete path to directories to which the backups should be saved
+- Separate each directory in the configuration file by a newline
+- Lines beginning with '#' are treated as comments
 
 ## To-Do 
 - better bak.conf file
