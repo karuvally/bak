@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# bak, an ultra simple backup utility, v0.3
+# bak, an ultra simple backup utility, v0.4
 # Released under GNU General Public License
 # Copyright 2016, Aswin Babu Karuvally
 
@@ -9,14 +9,20 @@ from os.path import getsize, join
 import argparse
 import shutil
 from datetime import datetime
+import tarfile
 
 
 # find directory size
-def find_directory_size(source_directory_path):
+def find_size(source_path):
     total_size = 0
-    for root, sub_directories, files in os.walk(source_directory_path):
-        for file in files:
-            total_size += getsize(join(root, file))
+    
+    if os.path.isdir(source_path):
+        for root, sub_directories, files in os.walk(source_path):
+            for file in files:
+                total_size += getsize(join(root, file))
+    
+    elif os.path.isfile(source_path):
+        total_size = getsize(source_path)
     
     if total_size < 1024:
         return_string = str(total_size) + ' bytes'
@@ -37,19 +43,31 @@ def find_directory_size(source_directory_path):
 
 
 # create the backup archive
-def create_backup_archive(target_directory_list, source_directory_path):
+def create_backup_archive(target_directory_list, source_path):
     date_string = '[' + datetime.now().strftime('%d-%m-%y') + ']'
     time_string = '[' + datetime.now().strftime('%H:%M:%S') + ']'
-    source_directory_name = '[' + os.path.basename(source_directory_path) + ']'
+    source_directory_name = '[' + os.path.basename(source_path) + ']'
     archive_name = source_directory_name + date_string + time_string
-
+    
     try:
-        shutil.make_archive(archive_name, 'tar', source_directory_path)
+        if os.path.isdir(source_path):
+            shutil.make_archive(archive_name, 'tar', source_path)
+        
+        elif os.path.isfile(source_path):
+            split_path = os.path.split(source_path)
+            
+            if split_path[0] != '':
+                os.chdir(split_path[0])
+            
+            archive = tarfile.open(archive_name + '.tar', 'w')
+            archive.add(split_path[1])
+            archive.close()
+            
         for target_directory in target_directory_list:
             shutil.copy(archive_name + '.tar', target_directory)
+            
         os.remove(archive_name + '.tar')
-
-        source_directory_size = find_directory_size(source_directory_path)
+        source_directory_size = find_size(source_path)
         print(source_directory_size, 'of files have been archived :)')
 
     except:
@@ -96,8 +114,8 @@ def check_configuration_file(configuration_file_path, user_name):
 def main():
     target_directory_list = []
     parser = argparse.ArgumentParser(description=
-        'bak, an ultra simple backup utility, v0.3')
-    parser.add_argument('-s', '--source', help='Choose the source directory')
+        'bak, an ultra simple backup utility, v0.4')
+    parser.add_argument('-s', '--source', help='Choose source file / directory')
     arguments = parser.parse_args()
 
     user_name = os.getlogin()
@@ -107,9 +125,9 @@ def main():
     check_target_directories(target_directory_list)
 
     if arguments.source:
-        source_directory_path = arguments.source
+        source_path = arguments.source
     else:
-        source_directory_path = os.getcwd()
-    create_backup_archive(target_directory_list, source_directory_path)
+        source_path = os.getcwd()
+    create_backup_archive(target_directory_list, source_path)
 
 main()
