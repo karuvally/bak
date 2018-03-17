@@ -27,10 +27,3 @@ for this application to run smoothly.
 - Separate each directory in the configuration file by a newline
 - Lines beginning with '#' are treated as comments
 
-## To-Do 
-- better bak.conf file
-- perform fail check  of the tarball
-- allow tar and zip archiving
-- better exception handling while reading config file
-- check if the path given as runtime argument is valid
-
