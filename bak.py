@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-# bak, an ultra simple backup utility, v0.4
+# bak, an ultra simple backup utility, v0.5
 # Released under GNU General Public License
-# Copyright 2016, Aswin Babu Karuvally
+# Copyright 2016-2018, Aswin Babu Karuvally
 
 # import some serious stuff
 import os
+import pwd
 from os.path import getsize, join
 import argparse
 import shutil
@@ -86,7 +87,7 @@ def check_target_directories(target_directory_list):
                 exit()
 
 
-# read configuration from bak
+# read configuration
 def read_configuration_file(configuration_file_path):
     target_directory_list = []
 
@@ -114,11 +115,11 @@ def check_configuration_file(configuration_file_path, user_name):
 def main():
     target_directory_list = []
     parser = argparse.ArgumentParser(description=
-        'bak, an ultra simple backup utility, v0.4')
+        'bak, an ultra simple backup utility, v0.5')
     parser.add_argument('-s', '--source', help='Choose source file / directory')
     arguments = parser.parse_args()
 
-    user_name = os.getlogin()
+    user_name = pwd.getpwuid(os.getuid())[0]
     configuration_file_path = '/home/' + user_name + '/.config/bak.conf'
     check_configuration_file(configuration_file_path, user_name)
     target_directory_list = read_configuration_file(configuration_file_path)
